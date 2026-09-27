@@ -30,6 +30,7 @@ import { findConfigFieldById } from './searchIndex';
 import { shouldReloadVisualDraft, useConfigDocument } from './hooks/useConfigDocument';
 import { useFieldJump } from './hooks/useFieldJump';
 import { useSourceSearch } from './hooks/useSourceSearch';
+import { CJKeviCorrectionSettings } from './components/CJKeviCorrectionSettings';
 import { ConfigHeader } from './components/ConfigHeader';
 import { ConfigSearch } from './components/ConfigSearch';
 import { ConfigTabs } from './components/ConfigTabs';
@@ -65,6 +66,7 @@ export function ConfigPage() {
   const resolvedTheme = useThemeStore((state) => state.resolvedTheme);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const revealRef = useRevealGroup<HTMLDivElement>();
+  const [correctionDirty, setCorrectionDirty] = useState(false);
 
   const {
     visualValues,
@@ -126,7 +128,7 @@ export function ConfigPage() {
 
   useUnsavedChangesGuard({
     enabled: isCurrentLayer,
-    shouldBlock: doc.isDirty,
+    shouldBlock: doc.isDirty || correctionDirty,
     dialog: unsavedChangesDialog,
   });
 
@@ -349,6 +351,16 @@ export function ConfigPage() {
           editable={!disableControls && !doc.loading}
         />
       )}
+
+      {/* Keep the dedicated settings draft mounted across tab/mode changes. YAML keeps its own two-phase save. */}
+      <div
+        className={styles.correctionPanel}
+        hidden={mode !== 'visual' || activeSection !== 'advanced'}
+        role="region"
+        aria-label={t('correction_settings.title')}
+      >
+        <CJKeviCorrectionSettings disabled={disableControls} onDirtyChange={setCorrectionDirty} />
+      </div>
 
       <FloatingSaveBar
         visible={isCurrentLayer && doc.isDirty}

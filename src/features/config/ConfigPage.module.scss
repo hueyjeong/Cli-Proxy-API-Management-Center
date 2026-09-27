@@ -36,6 +36,44 @@
   min-width: 0;
 }
 
+/* The correction editor is a separate, authenticated management resource, not a YAML field. */
+.correctionPanel {
+  min-width: 0;
+}
+
+.correctionPanel[hidden] {
+  display: none;
+}
+
+.correctionForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  min-width: 0;
+}
+
+.correctionActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 1px solid var(--border-color);
+}
+
+.correctionStatus {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: inherit;
+}
+
+.correctionError {
+  margin: 0;
+  color: var(--error-color);
+  font-size: inherit;
+}
+
 @include mobile {
   .page {
     gap: 16px;
